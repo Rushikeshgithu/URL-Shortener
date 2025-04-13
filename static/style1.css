@@ -1,0 +1,42 @@
+/* static/style.css */
+
+body {
+    font-family: sans-serif;
+    margin: 20px;
+    background-color: #f8f8f8; /* Light grey background */
+    color: #333; /* Dark grey text */
+    line-height: 1.6;
+}
+
+h1 {
+    color: #007bff; /* Blue heading */
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+p {
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+a {
+    color: #28a745; /* Green link color */
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+.container {
+    max-width: 600px;
+    margin: 30px auto;
+    padding: 20px;
+    background-color: #fff; /* White container background */
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+h1, p {
+    text-align: center;
+}
