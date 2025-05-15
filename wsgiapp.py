@@ -1,4 +1,3 @@
-
 from app import app
 from waitress import serve
 import platform
@@ -10,36 +9,28 @@ if __name__ == "__main__":
         print("Running Flask app with Waitress on Windows...")
         serve(app, host="0.0.0.0", port=8000)
     else:
-        print("For Linux/macOS, you can run this with Gunicorn:")
-        print("  gunicorn wsgi:app")
-        from gunicorn.app.base import Application
-        from gunicorn import util
+        print("For Linux/macOS, running with embedded Gunicorn app...")
 
-        class WSGIApplication(Application):
-            def init(self, parser, opts, args):
-                self.app_uri = None
-                if len(args) > 0:
-                    self.cfg.set("default_proc_name", args[0])
-                    self.app_uri = args[0]
-                if self.app_uri is None:
-                    if self.cfg.wsgi_app is not None:
-                        self.app_uri = self.cfg.wsgi_app
-                    else:
-                        raise ConfigError("No application module specified.")
+        from gunicorn.app.base import BaseApplication
+        import multiprocessing
+
+        class WSGIApplication(BaseApplication):
+            def __init__(self, app, options=None):
+                self.application = app
+                self.options = options or {}
+                super().__init__()
 
             def load_config(self):
-                super().load_config()
-                if self.app_uri is None:
-                    if self.cfg.wsgi_app is not None:
-                        self.app_uri = self.cfg.wsgi_app
-                    elif:
-                        raise ConfigError("No application module specified.")
-
-            def load_wsgiapp(self):
-                return util.import_app(self.app_uri)
+                for key, value in self.options.items():
+                    self.cfg.set(key, value)
 
             def load(self):
-                return self.load_wsgiapp()
+                return self.application
 
+        options = {
+            "bind": "0.0.0.0:8000",
+            "workers": multiprocessing.cpu_count() * 2 + 1,
+        }
 
-        WSGIApplication("%(prog)s [OPTIONS] [APP_MODULE]").run()
+        WSGIApplication(app, options).run()
+
