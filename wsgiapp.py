@@ -32,7 +32,7 @@ if __name__ == "__main__":
                 if self.app_uri is None:
                     if self.cfg.wsgi_app is not None:
                         self.app_uri = self.cfg.wsgi_app
-                    else:
+                    elif:
                         raise ConfigError("No application module specified.")
 
             def load_wsgiapp(self):
